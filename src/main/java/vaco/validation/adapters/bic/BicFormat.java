@@ -1,4 +1,4 @@
-package vaco.validation.adapters;
+package vaco.validation.adapters.bic;
 
 import vaco.validation.AbstractValidationAdapter;
 

@@ -1,0 +1,123 @@
+package vaco.validation.adapters.iban;
+
+import java.math.BigInteger;
+
+import vaco.validation.AbstractValidationAdapter;
+
+/**
+ * Validate standard IBAN (International Bank Account Number) against the
+ * defined pattern. All IBAN are validated against the national rules (length,
+ * country code and pattern) and then perform Modulo97-10.
+ * <p>
+ *
+ * Example to validate IBAN and other stuff:<br>
+ * <code>
+ * IbanValidator validator = new IbanValidator();
+ * if (!validator
+ *      .register(new IbanValidationAdapter("GR16 0110 1250 0000 0001 2300 695 ", IbanCountry.GR, "00030077"))
+ *      .register(new AnotherValidationAdapter(anotherDataToValidate))
+ *      .register(new SomeOtherValidationAdapter(someOtherDataToValidate))
+ *      .validate())
+ *  {
+ *      // raiseMessageBox... or log error...
+ *  }
+ * </code>
+ * <p>
+ *
+ * Or you can simply validate one IBAN:<br>
+ * <code>
+ * IbanValidator validator = new IbanValidator("SK31 1200 0000 1987 4263 7541");
+ * if (!validator.validate()) {
+ *      // raiseMessageBox... or log error...
+ * }
+ * </code>
+ *
+ * @author lokutus
+ */
+public class IbanFormat extends AbstractValidationAdapter<IbanFormat> {
+    
+    private String iban;
+    private IbanCountry ibanCountry;
+    
+    /**
+     * @param iban
+     * @param ibanCountry
+     * @param message
+     */
+    public IbanFormat(String iban , IbanCountry ibanCountry , String message) {
+        if (iban != null && iban.length() > 2) {
+            this.iban = iban;
+            
+            if (ibanCountry == null)
+                this.ibanCountry = IbanCountry.fromValue(iban.substring(0, 2));
+            else
+                this.ibanCountry = ibanCountry;
+        }
+        
+        setMessage(message);
+    }
+    
+    /**
+     * @param iban
+     * @param ibanCountry
+     */
+    public IbanFormat(String iban , IbanCountry ibanCountry) {
+        this(iban, ibanCountry, "");
+    }
+    
+    /**
+     * @param iban
+     * @param messageCode
+     */
+    public IbanFormat(String iban , String messageCode) {
+        this(iban, null, messageCode);
+    }
+    
+    /**
+     * @param iban
+     */
+    public IbanFormat(String iban) {
+        this(iban, "");
+    }
+    
+    @Override
+    public boolean isValid() {
+        if (iban == null || iban.length() < 2)
+            return false;
+        
+        /** IBAN can be formatted with spaces */
+        iban = iban.replaceAll("\\s", "");
+        
+        return (iban.length() == ibanCountry.getLength() || ibanCountry == IbanCountry.UNKNOWN)
+                && (ibanCountry.getValue().equals(iban.substring(0, 2)) || ibanCountry == IbanCountry.UNKNOWN)
+                && iban.matches(ibanCountry.getPattern())
+                && isValidModulo97(convertIbanToNumeric(iban));
+    }
+    
+    private boolean isValidModulo97(String convertedIban) {
+        BigInteger i = new BigInteger(convertedIban);
+        BigInteger mod = new BigInteger("97");
+        BigInteger result = i.remainder(mod);
+        
+        return BigInteger.ONE.equals(result);
+    }
+    
+    private String convertIbanToNumeric(String iban) {
+        String tmpIban = (iban.substring(4) + iban.substring(0, 4)).toUpperCase();
+        
+        StringBuilder convertedIban = new StringBuilder();
+        for (int i = 0; i < tmpIban.length(); i++) {
+            char x = tmpIban.charAt(i);
+            String tmp = x + "";
+            if (!tmp.matches("[0-9]{1}")) {
+                int ascii = x;
+                convertedIban.append((ascii - 55) + "");
+            } else {
+                convertedIban.append(tmp);
+            }
+            
+        }
+        
+        return convertedIban.toString();
+    }
+}
