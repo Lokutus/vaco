@@ -10,26 +10,14 @@ import vaco.validation.AbstractValidationAdapter;
  * country code and pattern) and then perform Modulo97-10.
  * <p>
  *
- * Example to validate IBAN and other stuff:<br>
+ * Example:<br>
  * <code>
  * IbanValidator validator = new IbanValidator();
- * if (!validator
- *      .register(new IbanValidationAdapter("GR16 0110 1250 0000 0001 2300 695 ", IbanCountry.GR, "00030077"))
- *      .register(new AnotherValidationAdapter(anotherDataToValidate))
- *      .register(new SomeOtherValidationAdapter(someOtherDataToValidate))
- *      .validate())
- *  {
- *      // raiseMessageBox... or log error...
+ * if (!validator<br>
+ *      .register(new IbanValidationAdapter("GR16 0110 1250 0000 0001 2300 695", IbanCountry.GR, "The IBAN is not valid."))<br>
+ *      .validate()) {<br>
+ *      // raiseMessageBox... or log error...<br>
  *  }
- * </code>
- * <p>
- *
- * Or you can simply validate one IBAN:<br>
- * <code>
- * IbanValidator validator = new IbanValidator("SK31 1200 0000 1987 4263 7541");
- * if (!validator.validate()) {
- *      // raiseMessageBox... or log error...
- * }
  * </code>
  *
  * @author lokutus
@@ -69,8 +57,8 @@ public class IbanFormat extends AbstractValidationAdapter<IbanFormat> {
      * @param iban
      * @param messageCode
      */
-    public IbanFormat(String iban , String messageCode) {
-        this(iban, null, messageCode);
+    public IbanFormat(String iban , String message) {
+        this(iban, null, message);
     }
     
     /**

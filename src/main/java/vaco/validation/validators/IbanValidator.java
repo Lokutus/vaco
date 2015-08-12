@@ -14,23 +14,19 @@ import vaco.validation.adapters.iban.IbanFormat;
  *
  * Example to validate IBAN and other stuff:<br>
  * <code>
- * IbanValidator validator = new IbanValidator();
- * if (!validator
- *      .register(new IbanValidationAdapter("GR16 0110 1250 0000 0001 2300 695 ", IbanCountry.GR, "00030077"))
- *      .register(new AnotherValidationAdapter(anotherDataToValidate))
- *      .register(new SomeOtherValidationAdapter(someOtherDataToValidate))
- *      .validate())
- *  {
- *      // raiseMessageBox... or log error...
+ * IbanValidator validator = new IbanValidator();<br>
+ * if (!validator<br>
+ *      .register(new IbanValidationAdapter("GR16 0110 1250 0000 0001 2300 695 ", IbanCountry.GR, "00030077"))<br>
+ *      .validate()) {<br>
+ *      // raiseMessageBox... or log error...<br>
  *  }
  * </code>
  * <p>
  *
- * Or you can simply validate one IBAN:<br>
+ * Or you can use IBAN validator constructor:<br>
  * <code>
- * IbanValidator validator = new IbanValidator("SK31 1200 0000 1987 4263 7541");
- * if (!validator.validate()) {
- *      // raiseMessageBox... or log error...
+ * if (!new IbanValidator("SK31 1200 0000 1987 4263 7541").validate()) {<br>
+ *      // raiseMessageBox... or log error...<br>
  * }
  * </code>
  *
