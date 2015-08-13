@@ -20,19 +20,6 @@ import vaco.conditions.Conditional;
  * <p>
  * <code>
  * String iban = "GR16 0110 1250 0000 0001 2300 695";
- * 
- * List<String> countryCodesEea = new ArrayList<String>();
- * countryCodes.add("AT");
- * countryCodes.add("BE");
- * countryCodes.add("HU");
- * countryCodes.add("IT");
- * countryCodes.add("DE");
- * countryCodes.add("CZ");
- * countryCodes.add("FR");
- * countryCodes.add("GB");
- * countryCodes.add("GR");
- * // ...
- * 
  * IbanValidator validator = new IbanValidator();
  * validator
  *      .register(new IbanValidationAdapter(iban, IbanCountry.fromValue(countryCode))
